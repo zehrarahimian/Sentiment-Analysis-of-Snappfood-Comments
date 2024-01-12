@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="path_to/bootstrap-rtl.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">
+    <title>Snappfood</title>
+    <link href="https://cdn.rawgit.com/rastikerdar/vazir-font/v27.0.1/dist/font-face.css" rel="stylesheet"
+        type="text/css" />
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+            background-color: #ed0b6d;
+            color: white;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .text-area-custom,
+        .submit-button-custom,
+        .label-custom {
+            margin-bottom: 35px;
+        }
+
+        .submit-button-custom {
+            background-color: white;
+            color: #e5669c;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .text-area-custom {
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #cf1563;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-dialog {
+            transition: all 0.3s;
+        }
+
+        .modal-content {
+            margin-top: 10%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader" class="loader"></div>
+    <div id="overlay"></div>
+    <div class="content-wrapper">
+        <h1 class="label-custom">تحلیل احساسات کامنت‌های اسنپ‌فود</h1>
+        <form action="/predict" method="post">
+            <textarea class="text-area-custom" name="user_input_text" rows="4" cols="50"
+                placeholder="نظر خود را اینجا وارد کنید...">{{ user_input }}</textarea>
+            <br>
+            <input type="submit" class="submit-button-custom" value="تحلیل نظر">
+        </form>
+        <div id="resultModal" class="modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Prediction Result</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalPredictionText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if prediction_text %}
+        <h2 id="predictionText">پیش‌بینی احساس: {{ prediction_text }}</h2>
+        {% endif %}
+
+    </div>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.querySelector('form');
+            var loader = document.getElementById('loader');
+            var overlay = document.getElementById('overlay');
+            var resultModal = document.getElementById('resultModal');
+            var modalPredictionText = document.getElementById('modalPredictionText');
+
+            form.onsubmit = function () {
+                loader.style.display = 'block';
+                overlay.style.display = 'block';
+            };
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.8/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
